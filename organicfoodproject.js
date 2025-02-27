@@ -19,12 +19,29 @@ app.use(cors())
 //----------------------------------------------------------------------------------------
 const EmployeeModel=require('./organicfood.js')
 
+//-----------------------------------------------------------------------------------------------------------
+              // mongoose.connect("mongodb://127.0.0.1:27017/OrganicFoodCompany");  //databasename-API
+             // app.use(bodyparse.urlencoded({extended:true}));
+             // app.use(bodyparse.json());
+//------------------------------------------------------------------------------------------------------------
+// Use environment variables
+const PORT = process.env.PORT || 3000;
+const MONGO_URL = process.env.MONGO_URL;
 
-mongoose.connect("mongodb://127.0.0.1:27017/OrganicFoodCompany");  //databasename-API
-
-app.use(bodyparse.urlencoded({extended:true}));
+// Middleware
+app.use(bodyparse.urlencoded({ extended: true }));
 app.use(bodyparse.json());
 
+// Connect to MongoDB
+mongoose.connect(MONGO_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log("MongoDB Connected"))
+.catch(err => console.error("MongoDB Connection Error:", err));
+
+
+//-----------------------------------------------------------------------------------------------------------
 
 
 //send data from server to client
@@ -545,9 +562,14 @@ app.get("/api/admin/dashboard", verifyAdmin, async (req, res) => {
 
 
 
+//----------------------------------------------------------------------------------------------------
+
+// Start Server
+app.listen(PORT, () => {
+  console.log(`Server Listening on Port ${PORT}`);
+});
 
 
 
-
-app.listen(2002);    
-console.log("Server Listening");
+// app.listen(2002);    
+// console.log("Server Listening");
